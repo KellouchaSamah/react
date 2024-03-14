@@ -60,6 +60,6 @@ export const PasswordInput = () => {
   );
 };
 
-export const EmailInput = () => {
-  return <BootstrapInput type="email" placeholder="Email" />;
+export const Input = ({ type, placeholder }) => {
+  return <BootstrapInput type={type} placeholder={placeholder} />;
 };

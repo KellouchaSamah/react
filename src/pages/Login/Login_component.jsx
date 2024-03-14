@@ -7,7 +7,7 @@ import { AccedezA } from '../../components/Labels_component/Labels_component';
 import { TutoReact } from '../../components/Labels_component/Labels_component';
 import { Label } from '../../components/Labels_component/Labels_component';
 import {
-  EmailInput,
+  Input,
   PasswordInput,
 } from '../../components/Input_component/Input_Component';
 import AddIcon from '@mui/icons-material/Add';
@@ -33,7 +33,7 @@ function Login_component() {
 
         <div>
           <Label>Email</Label>
-          <EmailInput defaultValue="Email" startIcon={<AddIcon />} />
+          <Input defaultValue="Email" startIcon={<AddIcon />} />
         </div>
         <div>
           <Label>Mot de passe </Label>

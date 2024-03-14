@@ -1,4 +1,5 @@
-import * as React from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import PropTypes from 'prop-types';
 import { useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
@@ -15,8 +16,8 @@ import FirstPageIcon from '@mui/icons-material/FirstPage';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import LastPageIcon from '@mui/icons-material/LastPage';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
+import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import TableHead from '@mui/material/TableHead';
 
 function TablePaginationActions(props) {
@@ -88,32 +89,24 @@ TablePaginationActions.propTypes = {
   rowsPerPage: PropTypes.number.isRequired,
 };
 
-function createData(lastName, firstName, Email) {
-  return { lastName, firstName, Email };
-}
-
-const rows = [
-  createData('Cupcake', 305, 3.7),
-  createData('Donut', 452, 25.0),
-  createData('Eclair', 262, 16.0),
-  createData('Frozen yoghurt', 159, 6.0),
-  createData('Gingerbread', 356, 16.0),
-  createData('Honeycomb', 408, 3.2),
-  createData('Ice cream sandwich', 237, 9.0),
-  createData('Jelly Bean', 375, 0.0),
-  createData('KitKat', 518, 26.0),
-  createData('Lollipop', 392, 0.2),
-  createData('Marshmallow', 318, 0),
-  createData('Nougat', 360, 19.0),
-  createData('Oreo', 437, 18.0),
-].sort((a, b) => (a.firstName < b.firstName ? -1 : 1));
-
 export default function TableComponent() {
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [persons, setPersons] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get(`http://localhost:5000/users`)
+      .then(res => {
+        setPersons(res.data);
+      })
+      .catch(err => {
+        console.error('Error fetching data:', err);
+      });
+  }, []);
 
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - persons.length) : 0;
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -129,29 +122,114 @@ export default function TableComponent() {
       <Table sx={{ minWidth: 500 }}>
         <TableHead>
           <TableRow>
-            <TableCell>Nom</TableCell>
-            <TableCell>Prénom</TableCell>
-            <TableCell>Email</TableCell>
-            <TableCell></TableCell>
+            <TableCell
+              sx={{
+                color: 'var(--button-color)',
+                fontFamily: 'Barlow',
+                fontWeight: '500',
+                fontSize: '14px',
+              }}
+            >
+              Nom
+            </TableCell>
+            <TableCell
+              sx={{
+                color: 'var(--button-color)',
+                fontFamily: 'Barlow',
+                fontWeight: '500',
+                fontSize: '14px',
+              }}
+            >
+              Prénom
+            </TableCell>
+            <TableCell
+              sx={{
+                color: 'var(--button-color)',
+                fontFamily: 'Barlow',
+                fontWeight: '500',
+                fontSize: '14px',
+              }}
+            >
+              Email
+            </TableCell>
+            <TableCell
+              sx={{
+                color: 'var(--button-color)',
+                fontFamily: 'Barlow',
+                fontWeight: '500',
+                fontSize: '14px',
+              }}
+            ></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {(rowsPerPage > 0
-            ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            : rows
-          ).map(row => (
-            <TableRow key={row.lastName}>
-              <TableCell style={{ width: 200 }} component="th" scope="row">
-                {row.lastName}
+            ? persons.slice(
+                page * rowsPerPage,
+                page * rowsPerPage + rowsPerPage,
+              )
+            : persons
+          ).map(person => (
+            <TableRow key={person.id}>
+              <TableCell
+                sx={{
+                  color: 'var(--table-content-color)',
+                  fontFamily: 'Barlow',
+                  fontWeight: '400',
+                  fontSize: '14px',
+                  width: 200,
+                }}
+                component="th"
+                scope="row"
+              >
+                {person.lastName}
               </TableCell>
-              <TableCell style={{ width: 200 }}>{row.firstName}</TableCell>
-              <TableCell style={{ width: 200 }}>{row.Email}</TableCell>
-              <TableCell style={{ width: 200 }}>
-                <IconButton aria-label="edit">
-                  <EditIcon />
+              <TableCell
+                sx={{
+                  color: 'var(--table-content-color)',
+                  fontFamily: 'Barlow',
+                  fontWeight: '400',
+                  fontSize: '14px',
+                  width: 200,
+                }}
+                style={{ width: 200 }}
+              >
+                {person.firstName}
+              </TableCell>
+              <TableCell
+                sx={{
+                  color: 'var(--table-content-color)',
+                  fontFamily: 'Barlow',
+                  fontWeight: '400',
+                  fontSize: '14px',
+                  width: 200,
+                }}
+                style={{ width: 200 }}
+              >
+                {person.email}
+              </TableCell>
+              <TableCell
+                sx={{
+                  color: 'var(--table-content-color)',
+                  fontFamily: 'Barlow',
+                  fontWeight: '400',
+                  fontSize: '14px',
+                  width: 200,
+                }}
+                style={{ width: 100 }}
+                align="right"
+              >
+                <IconButton
+                  style={{ color: 'var(--button-color)' }}
+                  aria-label="edit"
+                >
+                  <DriveFileRenameOutlineIcon />
                 </IconButton>
-                <IconButton aria-label="delete">
-                  <DeleteIcon />
+                <IconButton
+                  style={{ color: 'var(--button-color)' }}
+                  aria-label="delete"
+                >
+                  <DeleteOutlineIcon />
                 </IconButton>
               </TableCell>
             </TableRow>
@@ -165,14 +243,22 @@ export default function TableComponent() {
         <TableFooter>
           <TableRow>
             <TablePagination
+              style={{
+                color: 'var(--button-color)',
+                fontFamily: 'Barlow',
+                fontWeight: '400',
+                fontSize: '14px',
+                width: 200,
+              }}
               rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
               colSpan={4}
-              count={rows.length}
+              count={persons.length}
               rowsPerPage={rowsPerPage}
               page={page}
               onPageChange={handleChangePage}
               onRowsPerPageChange={handleChangeRowsPerPage}
               ActionsComponent={TablePaginationActions}
+              labelRowsPerPage="Éléments par page :"
             />
           </TableRow>
         </TableFooter>
