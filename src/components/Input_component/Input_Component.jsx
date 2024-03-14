@@ -4,7 +4,7 @@ import { styled } from '@mui/material/styles';
 import { InputAdornment, IconButton } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 
-const BootstrapInput = styled(InputBase)(({ theme }) => ({
+const BootstrapInput = styled(InputBase)(({ theme, width }) => ({
   '& .MuiInputBase-input': {
     borderRadius: 8,
     position: 'relative',
@@ -12,7 +12,7 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
     borderColor: theme.palette.mode === 'light' ? '#ECECEF' : '#2D3843',
     fontSize: 14,
     color: '#666D92',
-    width: '334px',
+    width: width || '334px',
     padding: '10px 12px',
     transition: theme.transitions.create([
       'border-color',
@@ -60,6 +60,6 @@ export const PasswordInput = () => {
   );
 };
 
-export const Input = ({ type, placeholder }) => {
-  return <BootstrapInput type={type} placeholder={placeholder} />;
+export const Input = ({ type, placeholder, width }) => {
+  return <BootstrapInput type={type} placeholder={placeholder} width={width} />;
 };
