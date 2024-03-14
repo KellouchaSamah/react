@@ -1,7 +1,10 @@
+import React, { useState } from 'react';
 import { InputBase } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { InputAdornment, IconButton } from '@mui/material';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 
-export const BootstrapInput = styled(InputBase)(({ theme }) => ({
+const BootstrapInput = styled(InputBase)(({ theme }) => ({
   '& .MuiInputBase-input': {
     borderRadius: 8,
     position: 'relative',
@@ -22,3 +25,41 @@ export const BootstrapInput = styled(InputBase)(({ theme }) => ({
     },
   },
 }));
+
+export const PasswordInput = () => {
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleClickShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+
+  return (
+    <BootstrapInput
+      type={showPassword ? 'text' : 'password'}
+      placeholder="********"
+      endAdornment={
+        <InputAdornment
+          position="end"
+          style={{
+            position: 'absolute',
+            right: '12px',
+            top: '50%',
+            transform: 'translateY(-50%)',
+          }}
+        >
+          <IconButton
+            aria-label="toggle password visibility"
+            onClick={handleClickShowPassword}
+            edge="end"
+          >
+            {showPassword ? <VisibilityOff /> : <Visibility />}
+          </IconButton>
+        </InputAdornment>
+      }
+    />
+  );
+};
+
+export const EmailInput = () => {
+  return <BootstrapInput type="email" placeholder="Email" />;
+};

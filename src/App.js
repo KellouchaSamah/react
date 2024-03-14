@@ -1,9 +1,15 @@
 import './App.css';
+import PersonList from './components/PersonList';
 
-import Login_component from './components/Login/Login_component';
+// import Login_component from './pages/Login/Login_component';
+// import { Users } from './pages/Users/Users';
 
 function App() {
-  return <Login_component />;
+  return (
+    // <Login_component/>
+    // <Users />
+    <PersonList></PersonList>
+  );
 }
 
 export default App;
