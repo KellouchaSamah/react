@@ -19,6 +19,8 @@ import LastPageIcon from '@mui/icons-material/LastPage';
 import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import TableHead from '@mui/material/TableHead';
+import AddUserModal from '../Modales/AddUserModal';
+import { async } from 'rxjs';
 
 function TablePaginationActions(props) {
   const theme = useTheme();
@@ -89,26 +91,18 @@ TablePaginationActions.propTypes = {
   rowsPerPage: PropTypes.number.isRequired,
 };
 
-export default function TableComponent() {
+export default function TableComponent(persons) {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [persons, setPersons] = useState([]);
 
-  useEffect(() => {
-    axios
-      .get(`http://localhost:5000/users`)
-      .then(res => {
-        setPersons(res.data);
-      })
-      .catch(err => {
-        console.error('Error fetching data:', err);
-      });
-  }, []);
+  //---------------------------------------
 
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - persons.length) : 0;
+    persons && page > 0
+      ? Math.max(0, (1 + page) * rowsPerPage - persons.length)
+      : 0;
 
-  const handleChangePage = (event, newPage) => {
+  const handleChangePage = newPage => {
     setPage(newPage);
   };
 
@@ -116,9 +110,18 @@ export default function TableComponent() {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
+  const [openEditUserModal, setOpenEditUserModal] = useState(false);
+  const [openDeleteUserModal, setOpenDeleteUserModal] = useState(false);
 
+  const handleOpenEditUserModal = () => {
+    setOpenEditUserModal(true);
+  };
+
+  function handleOpenDeleteUserModal(personId) {
+    setOpenDeleteUserModal(true);
+  }
   return (
-    <TableContainer component={Paper}>
+    <TableContainer component={Paper} style={{ width: '100%' }}>
       <Table sx={{ minWidth: 500 }}>
         <TableHead>
           <TableRow>
@@ -163,77 +166,80 @@ export default function TableComponent() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {(rowsPerPage > 0
-            ? persons.slice(
-                page * rowsPerPage,
-                page * rowsPerPage + rowsPerPage,
-              )
-            : persons
-          ).map(person => (
-            <TableRow key={person.id}>
-              <TableCell
-                sx={{
-                  color: 'var(--table-content-color)',
-                  fontFamily: 'Barlow',
-                  fontWeight: '400',
-                  fontSize: '14px',
-                  width: 200,
-                }}
-                component="th"
-                scope="row"
-              >
-                {person.lastName}
-              </TableCell>
-              <TableCell
-                sx={{
-                  color: 'var(--table-content-color)',
-                  fontFamily: 'Barlow',
-                  fontWeight: '400',
-                  fontSize: '14px',
-                  width: 200,
-                }}
-                style={{ width: 200 }}
-              >
-                {person.firstName}
-              </TableCell>
-              <TableCell
-                sx={{
-                  color: 'var(--table-content-color)',
-                  fontFamily: 'Barlow',
-                  fontWeight: '400',
-                  fontSize: '14px',
-                  width: 200,
-                }}
-                style={{ width: 200 }}
-              >
-                {person.email}
-              </TableCell>
-              <TableCell
-                sx={{
-                  color: 'var(--table-content-color)',
-                  fontFamily: 'Barlow',
-                  fontWeight: '400',
-                  fontSize: '14px',
-                  width: 200,
-                }}
-                style={{ width: 100 }}
-                align="right"
-              >
-                <IconButton
-                  style={{ color: 'var(--button-color)' }}
-                  aria-label="edit"
+          {persons &&
+            (rowsPerPage > 0
+              ? persons.slice(
+                  page * rowsPerPage,
+                  page * rowsPerPage + rowsPerPage,
+                )
+              : persons
+            ).map(person => (
+              <TableRow key={person.id}>
+                <TableCell
+                  sx={{
+                    color: 'var(--table-content-color)',
+                    fontFamily: 'Barlow',
+                    fontWeight: '400',
+                    fontSize: '14px',
+                    width: 200,
+                  }}
+                  component="th"
+                  scope="row"
                 >
-                  <DriveFileRenameOutlineIcon />
-                </IconButton>
-                <IconButton
-                  style={{ color: 'var(--button-color)' }}
-                  aria-label="delete"
+                  {persons && person.lastName}
+                </TableCell>
+                <TableCell
+                  sx={{
+                    color: 'var(--table-content-color)',
+                    fontFamily: 'Barlow',
+                    fontWeight: '400',
+                    fontSize: '14px',
+                    width: 200,
+                  }}
+                  style={{ width: 200 }}
                 >
-                  <DeleteOutlineIcon />
-                </IconButton>
-              </TableCell>
-            </TableRow>
-          ))}
+                  {persons && person.firstName}
+                </TableCell>
+                <TableCell
+                  sx={{
+                    color: 'var(--table-content-color)',
+                    fontFamily: 'Barlow',
+                    fontWeight: '400',
+                    fontSize: '14px',
+                    width: 200,
+                  }}
+                  style={{ width: 200 }}
+                >
+                  {persons && person.email}
+                </TableCell>
+                <TableCell
+                  sx={{
+                    color: 'var(--table-content-color)',
+                    fontFamily: 'Barlow',
+                    fontWeight: '400',
+                    fontSize: '14px',
+                    width: 200,
+                  }}
+                  style={{ width: 100 }}
+                  align="right"
+                >
+                  <IconButton
+                    style={{ color: 'var(--button-color)' }}
+                    aria-label="edit"
+                    onClick={handleOpenEditUserModal}
+                  >
+                    <DriveFileRenameOutlineIcon />
+                  </IconButton>
+                  <IconButton
+                    style={{ color: 'var(--button-color)' }}
+                    aria-label="delete"
+                    onClick={handleOpenDeleteUserModal(person.id)}
+                  >
+                    <DeleteOutlineIcon />
+                  </IconButton>
+                </TableCell>
+              </TableRow>
+            ))}
           {emptyRows > 0 && (
             <TableRow style={{ height: 53 * emptyRows }}>
               <TableCell colSpan={4} />
@@ -252,7 +258,7 @@ export default function TableComponent() {
               }}
               rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
               colSpan={4}
-              count={persons.length}
+              count={persons && persons.length}
               rowsPerPage={rowsPerPage}
               page={page}
               onPageChange={handleChangePage}
@@ -263,6 +269,20 @@ export default function TableComponent() {
           </TableRow>
         </TableFooter>
       </Table>
+      <AddUserModal
+        open={openEditUserModal}
+        setOpen={setOpenEditUserModal}
+        modalType={'update'}
+        title={'Modifier un utilisateur'}
+        ButtonName={'Modifier'}
+      />
+      <AddUserModal
+        open={openDeleteUserModal}
+        setOpen={setOpenDeleteUserModal}
+        modalType={'delete'}
+        title={'Confirmer la suppression'}
+        ButtonName={'Supprimer'}
+      />
     </TableContainer>
   );
 }

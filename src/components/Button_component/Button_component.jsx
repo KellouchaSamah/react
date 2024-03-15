@@ -15,6 +15,8 @@ export const BottonAddUser = styled(Button)({
     backgroundColor: 'var(--button-hover-color)',
     boxShadow: 'none',
   },
+  display: 'flex',
+  alignSelf: 'flex-end',
 });
 
 export const BottonAdd = styled(Button)({

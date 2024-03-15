@@ -6,3 +6,7 @@
   --label-primary-color: #00008c;
   --table-content-color: #666d92;
 }
+
+html {
+  background-color: #f8f8fb;
+}

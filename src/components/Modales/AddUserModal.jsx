@@ -4,86 +4,57 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
-import { Grid, Button, IconButton } from '@mui/material';
+import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
+import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
+import { Grid, IconButton } from '@mui/material';
 import { Input } from '../Input_component/Input_Component';
 import { Label } from '../Labels_component/Labels_component';
-import { BottonAdd, BottonCancel } from '../Button_component/Button_component';
+import {
+  BottonAdd,
+  BottonCancel,
+  BottonDelete,
+} from '../Button_component/Button_component';
 import { Typography } from '@mui/material';
 import Divider from '@mui/material/Divider';
 import CloseIcon from '@mui/icons-material/Close';
 
-export default function AddUserModal({ open, setOpen }) {
+export default function AddUserModal({
+  open,
+  setOpen,
+  modalType,
+  title,
+  ButtonName,
+}) {
   const handleClose = () => {
     setOpen(false);
   };
 
-  return (
-    <>
-      <React.Fragment>
-        <Dialog
-          open={open}
-          onClose={handleClose}
-          PaperProps={{
-            component: 'form',
-            onSubmit: event => {
-              event.preventDefault();
-              const formData = new FormData(event.currentTarget);
-              const formJson = Object.fromEntries(formData.entries());
-              const email = formJson.email;
-              console.log(email);
-              handleClose();
-            },
-          }}
-          fullWidth={true}
-          maxWidth={'sm'}
-          sm={600}
-        >
-          <DialogTitle>
-            <Grid
-              container
-              justifyContent="space-between"
-              alignItems="center"
-              style={{
-                padding: '16px 0px',
-              }}
-            >
-              <Grid
-                container
-                alignItems="center"
-                style={{
-                  width: 'fit-content',
-                  gap: 8,
-                }}
-              >
-                <PersonAddAltIcon style={{ fill: '#000ff0' }} />
-                <Typography
-                  variant="h6"
-                  style={{
-                    fontFamily: 'Montserrat',
-                    fontWeight: '600',
-                    fontSize: '16px',
-                    color: '#000ff0',
-                  }}
-                >
-                  Ajouter un utilisateur
-                </Typography>
-              </Grid>
-
-              <IconButton
-                style={{
-                  width: 40,
-                  height: 40,
-                  borderRadius: 8,
-                  backgroundColor: '#fff',
-                }}
-                onClick={handleClose}
-              >
-                <CloseIcon style={{ fill: '#00008C' }} />
-              </IconButton>
-            </Grid>
-          </DialogTitle>
-          <Divider />
-          <DialogContent>
+  const iconChange = () => {
+    switch (modalType) {
+      case 'add':
+        return (
+          <PersonAddAltIcon style={{ fill: 'var(--label-primary-color)' }} />
+        );
+      case 'delete':
+        return (
+          <PersonRemoveIcon style={{ fill: 'var(--label-primary-color)' }} />
+        );
+      case 'update':
+        return (
+          <DriveFileRenameOutlineIcon
+            style={{ fill: 'var(--label-primary-color)' }}
+          />
+        );
+      default:
+        return true;
+    }
+  };
+  const renderContent = () => {
+    switch (modalType) {
+      case 'add':
+      case 'update':
+        return (
+          <>
             <Grid container direction="column" style={{ gap: 16 }}>
               <Grid
                 container
@@ -105,20 +76,134 @@ export default function AddUserModal({ open, setOpen }) {
                 <Input type={'email'} placeholder={'Email'} width={'100%'} />
               </Grid>
             </Grid>
-          </DialogContent>
-          <DialogActions>
+          </>
+        );
+      case 'delete':
+        return (
+          <>
+            <Typography
+              style={{
+                color: 'var(--label-primary-color)',
+                fontFamily: 'Barlow',
+                fontWeight: 400,
+                fontSize: '16px',
+              }}
+            >
+              Vous êtes sur le point de supprimer un utilisateur. Cette action
+              est irrévercible. Souhaitez-vous confirmer ?{' '}
+            </Typography>
+          </>
+        );
+      default:
+        return null;
+    }
+  };
+
+  const renderActions = () => {
+    switch (modalType) {
+      case 'add':
+        return (
+          <>
+            <BottonCancel onClick={handleClose}>Annuler</BottonCancel>
+            <BottonAdd variant="contained">{ButtonName}</BottonAdd>
+          </>
+        );
+      case 'update':
+        return (
+          <>
+            <BottonCancel onClick={handleClose}>Annuler</BottonCancel>
+            <BottonAdd variant="contained">{ButtonName}</BottonAdd>
+          </>
+        );
+      case 'delete':
+        return (
+          <>
+            <BottonCancel onClick={handleClose}>Annuler</BottonCancel>
+            <BottonDelete variant="contained">Supprimer</BottonDelete>
+          </>
+        );
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        PaperProps={{
+          component: 'form',
+          onSubmit: event => {
+            event.preventDefault();
+            const formData = new FormData(event.currentTarget);
+            const formJson = Object.fromEntries(formData.entries());
+            const email = formJson.email;
+            console.log(email);
+            handleClose();
+          },
+        }}
+        fullWidth={true}
+        maxWidth={'sm'}
+        sm={600}
+      >
+        <DialogTitle>
+          <Grid
+            container
+            justifyContent="space-between"
+            alignItems="center"
+            style={{
+              padding: '16px 0px',
+            }}
+          >
             <Grid
               container
-              justifyContent="flex-end"
               alignItems="center"
-              style={{ padding: '8px 32px 16px 32px', gap: 24 }}
+              style={{
+                width: 'fit-content',
+                gap: 8,
+              }}
             >
-              <BottonCancel onClick={handleClose}>Annuler</BottonCancel>
-              <BottonAdd variant="contained">Ajouter</BottonAdd>
+              {iconChange()}
+              <Typography
+                variant="h6"
+                style={{
+                  fontFamily: 'Montserrat',
+                  fontWeight: '600',
+                  fontSize: '16px',
+                  color: 'var(--label-primary-color)',
+                }}
+              >
+                {title}
+              </Typography>
             </Grid>
-          </DialogActions>
-        </Dialog>
-      </React.Fragment>
+
+            <IconButton
+              style={{
+                width: 40,
+                height: 40,
+                borderRadius: 8,
+                backgroundColor: '#fff',
+              }}
+              onClick={handleClose}
+            >
+              <CloseIcon style={{ fill: '#00008C' }} />
+            </IconButton>
+          </Grid>
+        </DialogTitle>
+        <Divider />
+        <DialogContent>{renderContent()}</DialogContent>
+        <DialogActions>
+          <Grid
+            container
+            justifyContent="flex-end"
+            alignItems="center"
+            style={{ padding: '8px 32px 16px 32px', gap: 24 }}
+          >
+            {renderActions()}
+          </Grid>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }
