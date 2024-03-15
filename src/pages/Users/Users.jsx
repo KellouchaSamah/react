@@ -1,35 +1,40 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import TableComponent from '../../components/Table_component/Table_component';
 import { BottonAddUser } from '../../components/Button_component/Button_component';
 import AddIcon from '@mui/icons-material/Add';
 import AddUserModal from '../../components/Modales/AddUserModal';
-import SnackbarComponent from '../../components/SnackBar_Component/SnackbarComponent';
 import axios from 'axios';
+// import SnackbarComponent from '../../components/SnackBar_Component/SnackbarComponent';
 
 export const Users = () => {
   const [openAddUserModal, setOpenAddUserModal] = useState(false);
-  const [openSnackbar, setOpenSnackbar] = useState(false);
+  // const [openSnackbar, setOpenSnackbar] = useState(false);
   const [persons, setPersons] = useState(undefined);
-  const getData = async () => {
-    const data = await axios.get(`http://localhost:5000/users`);
-    setPersons(data.data);
-  };
+  const getData = useCallback(async () => {
+    try {
+      const data = await axios.get(`http://localhost:5000/users`);
+      setPersons(data.data);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  }, []);
+
   useEffect(() => {
     if (persons === undefined) {
       getData();
     }
-  }, [getData]);
+  }, [getData, persons]);
 
   const handleOpenAddUserModal = () => {
     setOpenAddUserModal(true);
   };
 
-  const handleClick = () => {
-    setOpenSnackbar(true);
-    setTimeout(() => {
-      setOpenSnackbar(false);
-    }, 3000);
-  };
+  // const handleClick = () => {
+  //   setOpenSnackbar(true);
+  //   setTimeout(() => {
+  //     setOpenSnackbar(false);
+  //   }, 3000);
+  // };
 
   return (
     <div
@@ -57,7 +62,7 @@ export const Users = () => {
         >
           Ajouter un utilisateur
         </BottonAddUser>
-        <TableComponent persons={persons} />
+        <TableComponent persons={persons && persons} />
       </div>
       <AddUserModal
         open={openAddUserModal}
@@ -69,13 +74,13 @@ export const Users = () => {
 
       {/* <Button onClick={handleClick}>Open Snackbar</Button> */}
 
-      <SnackbarComponent
+      {/* <SnackbarComponent
         message={
           'rouh takhrarthsrthrthrthrhsrthszrthsthsryhsryjhsryjnryjryjhsryjhsryhrjhsryhsrhsrhrh!'
         }
         open={openSnackbar}
         severity={'error'}
-      />
+      /> */}
     </div>
   );
 };

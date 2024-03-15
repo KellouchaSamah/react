@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
@@ -20,7 +19,6 @@ import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutli
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import TableHead from '@mui/material/TableHead';
 import AddUserModal from '../Modales/AddUserModal';
-import { async } from 'rxjs';
 
 function TablePaginationActions(props) {
   const theme = useTheme();
@@ -91,16 +89,14 @@ TablePaginationActions.propTypes = {
   rowsPerPage: PropTypes.number.isRequired,
 };
 
-export default function TableComponent(persons) {
+export default function TableComponent({ persons }) {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
   //---------------------------------------
 
   const emptyRows =
-    persons && page > 0
-      ? Math.max(0, (1 + page) * rowsPerPage - persons.length)
-      : 0;
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - persons.length) : 0;
 
   const handleChangePage = newPage => {
     setPage(newPage);
@@ -118,8 +114,10 @@ export default function TableComponent(persons) {
   };
 
   function handleOpenDeleteUserModal(personId) {
+    console.log(personId);
     setOpenDeleteUserModal(true);
   }
+
   return (
     <TableContainer component={Paper} style={{ width: '100%' }}>
       <Table sx={{ minWidth: 500 }}>
@@ -186,7 +184,7 @@ export default function TableComponent(persons) {
                   component="th"
                   scope="row"
                 >
-                  {persons && person.lastName}
+                  {person.lastName}
                 </TableCell>
                 <TableCell
                   sx={{
@@ -198,7 +196,7 @@ export default function TableComponent(persons) {
                   }}
                   style={{ width: 200 }}
                 >
-                  {persons && person.firstName}
+                  {person.firstName}
                 </TableCell>
                 <TableCell
                   sx={{
@@ -210,7 +208,7 @@ export default function TableComponent(persons) {
                   }}
                   style={{ width: 200 }}
                 >
-                  {persons && person.email}
+                  {person.email}
                 </TableCell>
                 <TableCell
                   sx={{
@@ -233,7 +231,7 @@ export default function TableComponent(persons) {
                   <IconButton
                     style={{ color: 'var(--button-color)' }}
                     aria-label="delete"
-                    onClick={handleOpenDeleteUserModal(person.id)}
+                    onClick={() => handleOpenDeleteUserModal(person.id)} // Utiliser une fonction anonyme
                   >
                     <DeleteOutlineIcon />
                   </IconButton>
@@ -258,7 +256,7 @@ export default function TableComponent(persons) {
               }}
               rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
               colSpan={4}
-              count={persons && persons.length}
+              count={persons ? persons.length : 0}
               rowsPerPage={rowsPerPage}
               page={page}
               onPageChange={handleChangePage}
