@@ -2,14 +2,13 @@ import React, { useState, useEffect, useCallback } from 'react';
 import TableComponent from '../../components/Table_component/Table_component';
 import { BottonAddUser } from '../../components/Button_component/Button_component';
 import AddIcon from '@mui/icons-material/Add';
-import AddUserModal from '../../components/Modales/AddUserModal';
+import Modales from '../../components/Modales/Modales';
 import axios from 'axios';
-// import SnackbarComponent from '../../components/SnackBar_Component/SnackbarComponent';
 
 export const Users = () => {
-  const [openAddUserModal, setOpenAddUserModal] = useState(false);
-  // const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [openModales, setOpenModales] = useState(false);
   const [persons, setPersons] = useState(undefined);
+  //--------------------------------Getting data finally ---------------------------------
   const getData = useCallback(async () => {
     try {
       const data = await axios.get(`http://localhost:5000/users`);
@@ -25,15 +24,12 @@ export const Users = () => {
     }
   }, [getData, persons]);
 
-  const handleOpenAddUserModal = () => {
-    setOpenAddUserModal(true);
+  const handleOpenModales = () => {
+    setOpenModales(true);
   };
 
   // const handleClick = () => {
-  //   setOpenSnackbar(true);
-  //   setTimeout(() => {
-  //     setOpenSnackbar(false);
-  //   }, 3000);
+  //   
   // };
 
   return (
@@ -58,15 +54,15 @@ export const Users = () => {
           startIcon={<AddIcon />}
           variant="contained"
           disableRipple
-          onClick={handleOpenAddUserModal}
+          onClick={handleOpenModales}
         >
           Ajouter un utilisateur
         </BottonAddUser>
         <TableComponent persons={persons && persons} />
       </div>
-      <AddUserModal
-        open={openAddUserModal}
-        setOpen={setOpenAddUserModal}
+      <Modales
+        open={openModales}
+        setOpen={setOpenModales}
         modalType={'add'}
         title={'Ajouter un utilisateur'}
         ButtonName={'Ajouter'}

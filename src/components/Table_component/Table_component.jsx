@@ -18,7 +18,7 @@ import LastPageIcon from '@mui/icons-material/LastPage';
 import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import TableHead from '@mui/material/TableHead';
-import AddUserModal from '../Modales/AddUserModal';
+import Modales from '../Modales/Modales';
 
 function TablePaginationActions(props) {
   const theme = useTheme();
@@ -108,15 +108,16 @@ export default function TableComponent({ persons }) {
   };
   const [openEditUserModal, setOpenEditUserModal] = useState(false);
   const [openDeleteUserModal, setOpenDeleteUserModal] = useState(false);
+  const [UserID, setUserID] = useState(null);
 
   const handleOpenEditUserModal = () => {
     setOpenEditUserModal(true);
   };
 
-  function handleOpenDeleteUserModal(personId) {
-    console.log(personId);
+  const handleOpenDeleteUserModal = userId => {
+    setUserID(userId);
     setOpenDeleteUserModal(true);
-  }
+  };
 
   return (
     <TableContainer component={Paper} style={{ width: '100%' }}>
@@ -231,7 +232,7 @@ export default function TableComponent({ persons }) {
                   <IconButton
                     style={{ color: 'var(--button-color)' }}
                     aria-label="delete"
-                    onClick={() => handleOpenDeleteUserModal(person.id)} // Utiliser une fonction anonyme
+                    onClick={() => handleOpenDeleteUserModal(person.id)}
                   >
                     <DeleteOutlineIcon />
                   </IconButton>
@@ -267,19 +268,21 @@ export default function TableComponent({ persons }) {
           </TableRow>
         </TableFooter>
       </Table>
-      <AddUserModal
+      <Modales
         open={openEditUserModal}
         setOpen={setOpenEditUserModal}
         modalType={'update'}
         title={'Modifier un utilisateur'}
         ButtonName={'Modifier'}
+        userId={UserID}
       />
-      <AddUserModal
+      <Modales
         open={openDeleteUserModal}
         setOpen={setOpenDeleteUserModal}
         modalType={'delete'}
         title={'Confirmer la suppression'}
         ButtonName={'Supprimer'}
+        userId={UserID}
       />
     </TableContainer>
   );

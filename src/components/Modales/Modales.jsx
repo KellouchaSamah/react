@@ -17,17 +17,45 @@ import {
 import { Typography } from '@mui/material';
 import Divider from '@mui/material/Divider';
 import CloseIcon from '@mui/icons-material/Close';
+import axios from 'axios';
+import SnackbarComponent from '../SnackBar_Component/SnackbarComponent';
 
-export default function AddUserModal({
+export default function Modales({
   open,
   setOpen,
   modalType,
   title,
   ButtonName,
+  userId,
 }) {
+  const [openSnackbarError, setOpenSnackbarError] = React.useState(false);
+  const [openSnackbarSuccess, setOpenSnackbarSuccess] = React.useState(false);
+
   const handleClose = () => {
     setOpen(false);
   };
+
+  function DeleteUser() {
+    console.log(userId);
+    axios
+      .delete(`http://localhost:5000/users/${userId}`)
+      .then(response => {
+        console.log('User deleted successfully');
+        setOpenSnackbarSuccess(true);
+        setTimeout(() => {
+          setOpenSnackbarSuccess(false);
+          handleClose();
+        }, 3000);
+      })
+      .catch(error => {
+        console.error('Error deleting user:', error);
+        setOpenSnackbarError(true);
+        setTimeout(() => {
+          handleClose();
+          setOpenSnackbarError(false);
+        }, 3000);
+      });
+  }
 
   const iconChange = () => {
     switch (modalType) {
@@ -119,7 +147,9 @@ export default function AddUserModal({
         return (
           <>
             <BottonCancel onClick={handleClose}>Annuler</BottonCancel>
-            <BottonDelete variant="contained">Supprimer</BottonDelete>
+            <BottonDelete variant="contained" onClick={DeleteUser}>
+              Supprimer
+            </BottonDelete>
           </>
         );
       default:
@@ -203,6 +233,17 @@ export default function AddUserModal({
             {renderActions()}
           </Grid>
         </DialogActions>
+
+        <SnackbarComponent
+          message={'La suppression de l’utilisateur a échoué '}
+          open={openSnackbarError}
+          severity={'error'}
+        />
+        <SnackbarComponent
+          message={'L’utilisateur a été supprimé avec succès '}
+          open={openSnackbarSuccess}
+          severity={'success'}
+        />
       </Dialog>
     </>
   );
