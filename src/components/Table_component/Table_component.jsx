@@ -11,14 +11,14 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import IconButton from '@mui/material/IconButton';
-import FirstPageIcon from '@mui/icons-material/FirstPage';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
-import LastPageIcon from '@mui/icons-material/LastPage';
 import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import TableHead from '@mui/material/TableHead';
 import Modales from '../Modales/Modales';
+import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
+import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
 
 function TablePaginationActions(props) {
   const theme = useTheme();
@@ -47,7 +47,13 @@ function TablePaginationActions(props) {
         disabled={page === 0}
         aria-label="first page"
       >
-        {theme.direction === 'rtl' ? <LastPageIcon /> : <FirstPageIcon />}
+        {theme.direction === 'rtl' ? (
+          <KeyboardDoubleArrowRightIcon />
+        ) : (
+          <KeyboardDoubleArrowLeftIcon
+            style={{ fill: 'var(--primary-color)' }}
+          />
+        )}
       </IconButton>
       <IconButton
         onClick={handleBackButtonClick}
@@ -76,7 +82,13 @@ function TablePaginationActions(props) {
         disabled={page >= Math.ceil(count / rowsPerPage) - 1}
         aria-label="last page"
       >
-        {theme.direction === 'rtl' ? <FirstPageIcon /> : <LastPageIcon />}
+        {theme.direction === 'rtl' ? (
+          <KeyboardDoubleArrowLeftIcon />
+        ) : (
+          <KeyboardDoubleArrowRightIcon
+            style={{ fill: 'var(--primary-color)' }}
+          />
+        )}
       </IconButton>
     </Box>
   );
@@ -98,7 +110,7 @@ export default function TableComponent({ persons }) {
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - persons.length) : 0;
 
-  const handleChangePage = newPage => {
+  const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
 
@@ -108,9 +120,13 @@ export default function TableComponent({ persons }) {
   };
   const [openEditUserModal, setOpenEditUserModal] = useState(false);
   const [openDeleteUserModal, setOpenDeleteUserModal] = useState(false);
-  const [UserID, setUserID] = useState(null);
+  const [UserID, setUserID] = useState('');
+  const [user, setUser] = useState(null);
 
-  const handleOpenEditUserModal = () => {
+  // il faut mettre await pour attendre la reponse de la requete
+  const handleOpenEditUserModal = async user => {
+    setUser(user);
+    setUserID(user.id);
     setOpenEditUserModal(true);
   };
 
@@ -126,9 +142,9 @@ export default function TableComponent({ persons }) {
           <TableRow>
             <TableCell
               sx={{
-                color: 'var(--button-color)',
+                color: 'var(--primary-color)',
                 fontFamily: 'Barlow',
-                fontWeight: '500',
+                fontWeight: '600',
                 fontSize: '14px',
               }}
             >
@@ -136,9 +152,9 @@ export default function TableComponent({ persons }) {
             </TableCell>
             <TableCell
               sx={{
-                color: 'var(--button-color)',
+                color: 'var(--primary-color)',
                 fontFamily: 'Barlow',
-                fontWeight: '500',
+                fontWeight: '600',
                 fontSize: '14px',
               }}
             >
@@ -146,9 +162,9 @@ export default function TableComponent({ persons }) {
             </TableCell>
             <TableCell
               sx={{
-                color: 'var(--button-color)',
+                color: 'var(--primary-color)',
                 fontFamily: 'Barlow',
-                fontWeight: '500',
+                fontWeight: '600',
                 fontSize: '14px',
               }}
             >
@@ -156,9 +172,9 @@ export default function TableComponent({ persons }) {
             </TableCell>
             <TableCell
               sx={{
-                color: 'var(--button-color)',
+                color: 'var(--primary-color)',
                 fontFamily: 'Barlow',
-                fontWeight: '500',
+                fontWeight: '600',
                 fontSize: '14px',
               }}
             ></TableCell>
@@ -225,7 +241,7 @@ export default function TableComponent({ persons }) {
                   <IconButton
                     style={{ color: 'var(--button-color)' }}
                     aria-label="edit"
-                    onClick={handleOpenEditUserModal}
+                    onClick={() => handleOpenEditUserModal(person)}
                   >
                     <DriveFileRenameOutlineIcon />
                   </IconButton>
@@ -268,21 +284,25 @@ export default function TableComponent({ persons }) {
           </TableRow>
         </TableFooter>
       </Table>
-      <Modales
-        open={openEditUserModal}
-        setOpen={setOpenEditUserModal}
-        modalType={'update'}
-        title={'Modifier un utilisateur'}
-        ButtonName={'Modifier'}
-        userId={UserID}
-      />
+      {user && (
+        <Modales
+          open={openEditUserModal}
+          setOpen={setOpenEditUserModal}
+          modalType={'update'}
+          title={'Modifier un utilisateur'}
+          userId={UserID}
+          user={user}
+          resetUser={() => setUser(undefined)}
+        />
+      )}
+
       <Modales
         open={openDeleteUserModal}
         setOpen={setOpenDeleteUserModal}
         modalType={'delete'}
         title={'Confirmer la suppression'}
-        ButtonName={'Supprimer'}
         userId={UserID}
+        resetUser={() => setUser(undefined)}
       />
     </TableContainer>
   );

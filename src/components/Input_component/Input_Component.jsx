@@ -26,7 +26,7 @@ const BootstrapInput = styled(InputBase)(({ theme, width }) => ({
   },
 }));
 
-export const PasswordInput = () => {
+export const PasswordInput = ({ onChange, defaultValue }) => {
   const [showPassword, setShowPassword] = useState(false);
 
   const handleClickShowPassword = () => {
@@ -37,14 +37,16 @@ export const PasswordInput = () => {
     <BootstrapInput
       type={showPassword ? 'text' : 'password'}
       placeholder="********"
+      onChange={onChange}
+      defaultValue={defaultValue}
       endAdornment={
         <InputAdornment
-          position="end"
+          position="start"
           style={{
             position: 'absolute',
             right: '12px',
             top: '50%',
-            transform: 'translateY(-50%)',
+            transform: 'translateX(-180%)',
           }}
         >
           <IconButton
@@ -52,7 +54,11 @@ export const PasswordInput = () => {
             onClick={handleClickShowPassword}
             edge="end"
           >
-            {showPassword ? <VisibilityOff /> : <Visibility />}
+            {showPassword ? (
+              <VisibilityOff style={{ fill: 'var(--primary-color)' }} />
+            ) : (
+              <Visibility style={{ fill: 'var(--primary-color)' }} />
+            )}
           </IconButton>
         </InputAdornment>
       }
@@ -60,6 +66,24 @@ export const PasswordInput = () => {
   );
 };
 
-export const Input = ({ type, placeholder, width }) => {
-  return <BootstrapInput type={type} placeholder={placeholder} width={width} />;
+export const Input = ({
+  type,
+  placeholder,
+  width,
+  onChange,
+  defaultValue,
+  error,
+  value,
+}) => {
+  return (
+    <BootstrapInput
+      type={type}
+      error={error}
+      placeholder={placeholder}
+      width={width}
+      onChange={onChange}
+      defaultValue={defaultValue}
+      value={value}
+    />
+  );
 };

@@ -15,8 +15,8 @@ export const AccedezA = styled(Typography)({
   fontWeight: 600,
 });
 export const Label = styled(Typography)({
-  color: 'var(--label-primary-color)',
+  color: 'var(--primary-color)',
   fontFamily: 'Barlow',
   fontSize: '14px',
-  fontWeight: 500,
+  fontWeight: 600,
 });

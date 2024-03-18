@@ -5,8 +5,14 @@ import Toolbar from '@mui/material/Toolbar';
 import Button from '@mui/material/Button';
 import Img from '../../assets/images/logo.PNG';
 import LogoutIcon from '@mui/icons-material/Logout';
+import { useNavigate } from 'react-router-dom';
 
 export default function HeaderComponent() {
+  const navigate = useNavigate();
+  const handleLogOut = () => {
+    localStorage.removeItem('token');
+    navigate('/');
+  };
   return (
     <Box
       sx={{
@@ -34,18 +40,20 @@ export default function HeaderComponent() {
               height: '32px',
             }}
             src={Img}
+            alt="DocaPoste"
           />
 
           <Button
             startIcon={<LogoutIcon />}
             sx={{
-              color: 'var(--label-primary-color)',
+              color: 'var(--primary-color)',
               alignItems: 'flex-end',
               fontFamily: 'Montserrat',
               fontWeight: 600,
               fontSize: '14px',
               textTransform: 'unset',
             }}
+            onClick={handleLogOut}
           >
             Déconnexion
           </Button>

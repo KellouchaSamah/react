@@ -17,60 +17,137 @@ import {
 import { Typography } from '@mui/material';
 import Divider from '@mui/material/Divider';
 import CloseIcon from '@mui/icons-material/Close';
-import axios from 'axios';
 import SnackbarComponent from '../SnackBar_Component/SnackbarComponent';
+import { useState } from 'react';
+import {
+  addUser,
+  deleteUser,
+  getUsers,
+  updateUser,
+} from '../../services/userService';
+import { useNavigate } from 'react-router-dom';
 
 export default function Modales({
   open,
   setOpen,
   modalType,
   title,
-  ButtonName,
   userId,
+  user,
+  resetUser,
 }) {
-  const [openSnackbarError, setOpenSnackbarError] = React.useState(false);
-  const [openSnackbarSuccess, setOpenSnackbarSuccess] = React.useState(false);
+  const navigate = useNavigate();
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [message, setMessage] = useState('');
+  const [severity, setSeverity] = useState('');
+  const [email, setEmail] = useState(user?.email);
+  const [firstName, setFirstName] = useState(user?.firstName);
+  const [lastName, setLastName] = useState(user?.lastName);
+  // const [isValidEmail, setIsValidEmail] = useState(true);
+
+  const handleEmailChange = e => {
+    setEmail(e.target.value);
+    // const isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+    // setIsValidEmail(isValid);
+  };
+
+  const handleFirstNameChange = e => {
+    setFirstName(e.target.value);
+  };
+
+  const handleLastNameChange = e => {
+    setLastName(e.target.value);
+  };
 
   const handleClose = () => {
     setOpen(false);
+    resetUser()
   };
 
-  function DeleteUser() {
-    console.log(userId);
-    axios
-      .delete(`http://localhost:5000/users/${userId}`)
-      .then(response => {
-        console.log('User deleted successfully');
-        setOpenSnackbarSuccess(true);
-        setTimeout(() => {
-          setOpenSnackbarSuccess(false);
-          handleClose();
-        }, 3000);
-      })
-      .catch(error => {
-        console.error('Error deleting user:', error);
-        setOpenSnackbarError(true);
-        setTimeout(() => {
-          handleClose();
-          setOpenSnackbarError(false);
-        }, 3000);
-      });
-  }
+  const handleDeleteUser = async () => {
+    try {
+      await deleteUser(userId);
+      setMessage('L’utilisateur a été supprimé avec succès ');
+      setSeverity('success');
+      setOpenSnackbar(true);
+      setTimeout(() => {
+        setOpenSnackbar(false);
+        handleClose();
+      }, 1500);
+    } catch (error) {
+      setMessage('La suppression de l’utilisateur a échoué ');
+      setSeverity('error');
+      setOpenSnackbar(true);
+      setTimeout(() => {
+        setOpenSnackbar(false);
+        handleClose();
+      }, 1500);
+    }
+  };
 
+  const handleAddUser = async () => {
+    try {
+      const myUser = {
+        lastName: lastName,
+        firstName: firstName,
+        email: email,
+      };
+      await addUser(myUser);
+      setMessage('L’utilisateur a été ajouté avec succès  ');
+      setSeverity('success');
+      setOpenSnackbar(true);
+      setTimeout(() => {
+        setOpenSnackbar(false);
+        handleClose();
+      }, 1500);
+    } catch (error) {
+      setMessage('L’ajout de l’utilisateur a échoué ');
+      setSeverity('error');
+      setOpenSnackbar(true);
+      setTimeout(() => {
+        handleClose();
+        setOpenSnackbar(false);
+      }, 1500);
+    }
+  };
+
+  const loadDataFunction = async () => {
+    const response = await getUsers();
+  };
+
+  const handleUpdateUser = async () => {
+    try {
+      const updatedUser = {
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+      };
+
+      await updateUser(userId, updatedUser);
+      setMessage('L’utilisateur a été modifié avec succès   ');
+      setSeverity('success');
+    } catch (error) {
+      setMessage('La modification de l’utilisateur a échoué ');
+      setSeverity('error');
+    }
+    setOpenSnackbar(true);
+    loadDataFunction();
+    setTimeout(() => {
+      handleClose();
+      setOpenSnackbar(false);
+      getUsers();
+    }, 1500);
+  };
   const iconChange = () => {
     switch (modalType) {
       case 'add':
-        return (
-          <PersonAddAltIcon style={{ fill: 'var(--label-primary-color)' }} />
-        );
+        return <PersonAddAltIcon style={{ fill: 'var(--primary-color)' }} />;
       case 'delete':
-        return (
-          <PersonRemoveIcon style={{ fill: 'var(--label-primary-color)' }} />
-        );
+        return <PersonRemoveIcon style={{ fill: 'var(--primary-color)' }} />;
       case 'update':
         return (
           <DriveFileRenameOutlineIcon
-            style={{ fill: 'var(--label-primary-color)' }}
+            style={{ fill: 'var(--primary-color)' }}
           />
         );
       default:
@@ -80,7 +157,6 @@ export default function Modales({
   const renderContent = () => {
     switch (modalType) {
       case 'add':
-      case 'update':
         return (
           <>
             <Grid container direction="column" style={{ gap: 16 }}>
@@ -92,26 +168,88 @@ export default function Modales({
               >
                 <Grid container direction="column" flex={1} style={{ gap: 4 }}>
                   <Label>Nom</Label>
-                  <Input type={'text'} placeholder={'Input'} width={'100%'} />
+                  <Input
+                    type={'text'}
+                    onChange={handleLastNameChange}
+                    placeholder={'Nom'}
+                    width={'100%'}
+                  />
                 </Grid>
                 <Grid container direction="column" flex={1} style={{ gap: 4 }}>
                   <Label>Prénom</Label>
-                  <Input type={'text'} placeholder={'Input'} width={'100%'} />
+                  <Input
+                    type={'text'}
+                    onChange={handleFirstNameChange}
+                    placeholder={'Prénom'}
+                    width={'100%'}
+                  />
                 </Grid>
               </Grid>
               <Grid container direction="column" style={{ gap: 4 }}>
                 <Label>Email</Label>
-                <Input type={'email'} placeholder={'Email'} width={'100%'} />
+                <Input
+                  type={'email'}
+                  placeholder={'Email'}
+                  width={'100%'}
+                  // value={email}
+                  onChange={handleEmailChange}
+                  // error={!isValidEmail}
+                  // helperText={
+                  //   !isValidEmail ? 'Entrer une adresse mail valide !' : ''
+                  // }
+                />
               </Grid>
             </Grid>
           </>
+        );
+      case 'update':
+        return (
+          <Grid container direction="column" style={{ gap: 16 }}>
+            <Grid
+              container
+              style={{
+                gap: '20px',
+              }}
+            >
+              <Grid container direction="column" flex={1} style={{ gap: 4 }}>
+                <Label>Nom</Label>
+                <Input
+                  type={'text'}
+                  placeholder={'Nom'}
+                  value={lastName}
+                  width={'100%'}
+                  onChange={handleLastNameChange}
+                />
+              </Grid>
+              <Grid container direction="column" flex={1} style={{ gap: 4 }}>
+                <Label>Prénom</Label>
+                <Input
+                  type={'text'}
+                  placeholder={'Prénom'}
+                  width={'100%'}
+                  value={firstName}
+                  onChange={handleFirstNameChange}
+                />
+              </Grid>
+            </Grid>
+            <Grid container direction="column" style={{ gap: 4 }}>
+              <Label>Email</Label>
+              <Input
+                type={'email'}
+                placeholder={'Email'}
+                width={'100%'}
+                value={email}
+                onChange={handleEmailChange}
+              />
+            </Grid>
+          </Grid>
         );
       case 'delete':
         return (
           <>
             <Typography
               style={{
-                color: 'var(--label-primary-color)',
+                color: 'var(--primary-color)',
                 fontFamily: 'Barlow',
                 fontWeight: 400,
                 fontSize: '16px',
@@ -133,21 +271,29 @@ export default function Modales({
         return (
           <>
             <BottonCancel onClick={handleClose}>Annuler</BottonCancel>
-            <BottonAdd variant="contained">{ButtonName}</BottonAdd>
+            <BottonAdd
+              variant="contained"
+              type="submit"
+              onClick={handleAddUser}
+            >
+              Ajouter
+            </BottonAdd>
           </>
         );
       case 'update':
         return (
           <>
             <BottonCancel onClick={handleClose}>Annuler</BottonCancel>
-            <BottonAdd variant="contained">{ButtonName}</BottonAdd>
+            <BottonAdd variant="contained" onClick={handleUpdateUser}>
+              Modifier
+            </BottonAdd>
           </>
         );
       case 'delete':
         return (
           <>
             <BottonCancel onClick={handleClose}>Annuler</BottonCancel>
-            <BottonDelete variant="contained" onClick={DeleteUser}>
+            <BottonDelete variant="contained" onClick={handleDeleteUser}>
               Supprimer
             </BottonDelete>
           </>
@@ -162,17 +308,6 @@ export default function Modales({
       <Dialog
         open={open}
         onClose={handleClose}
-        PaperProps={{
-          component: 'form',
-          onSubmit: event => {
-            event.preventDefault();
-            const formData = new FormData(event.currentTarget);
-            const formJson = Object.fromEntries(formData.entries());
-            const email = formJson.email;
-            console.log(email);
-            handleClose();
-          },
-        }}
         fullWidth={true}
         maxWidth={'sm'}
         sm={600}
@@ -201,7 +336,7 @@ export default function Modales({
                   fontFamily: 'Montserrat',
                   fontWeight: '600',
                   fontSize: '16px',
-                  color: 'var(--label-primary-color)',
+                  color: 'var(--primary-color)',
                 }}
               >
                 {title}
@@ -235,14 +370,9 @@ export default function Modales({
         </DialogActions>
 
         <SnackbarComponent
-          message={'La suppression de l’utilisateur a échoué '}
-          open={openSnackbarError}
-          severity={'error'}
-        />
-        <SnackbarComponent
-          message={'L’utilisateur a été supprimé avec succès '}
-          open={openSnackbarSuccess}
-          severity={'success'}
+          open={openSnackbar}
+          message={message}
+          severity={severity}
         />
       </Dialog>
     </>

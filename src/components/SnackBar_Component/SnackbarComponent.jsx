@@ -5,7 +5,7 @@ import { Grid } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
 
-export default function SnackbarComponent({ message, open, severity }) {
+export default function SnackbarComponent({ message, open, severity, autoHideDuration }) {
   const getIcon = () => {
     switch (severity) {
       case 'error':
@@ -28,9 +28,9 @@ export default function SnackbarComponent({ message, open, severity }) {
     }
   };
   return (
-    <Snackbar open={open} autoHideDuration={1000}>
+    <Snackbar open={open} autoHideDuration={autoHideDuration}>
       <Alert
-        icon={getIcon()} // Utilisez une fonction pour retourner l'icône appropriée
+        icon={getIcon()} 
         severity={severity}
         sx={{ width: '100%', backgroundColor: '#fff' }}
       >
@@ -40,7 +40,7 @@ export default function SnackbarComponent({ message, open, severity }) {
             fontSize: '14px',
             fontWeight: 600,
             height: '16px',
-            color: 'var(--label-primary-color)',
+            color: 'var(--primary-color)',
             marginBottom: '10px',
           }}
         >

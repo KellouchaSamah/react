@@ -1,82 +1,72 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import TableComponent from '../../components/Table_component/Table_component';
 import { BottonAddUser } from '../../components/Button_component/Button_component';
+import HeaderComponent from '../../components/Header_Component/HeaderComponent';
+
 import AddIcon from '@mui/icons-material/Add';
 import Modales from '../../components/Modales/Modales';
-import axios from 'axios';
+import { Grid } from '@mui/material';
+import { getUsers } from '../../services/userService';
 
 export const Users = () => {
   const [openModales, setOpenModales] = useState(false);
   const [persons, setPersons] = useState(undefined);
   //--------------------------------Getting data finally ---------------------------------
-  const getData = useCallback(async () => {
+  const fetchData = useCallback(async () => {
     try {
-      const data = await axios.get(`http://localhost:5000/users`);
-      setPersons(data.data);
+      const users = await getUsers();
+      setPersons(users);
     } catch (error) {
-      console.error('Error fetching data:', error);
+      console.error('Error fetching users:', error);
     }
   }, []);
 
   useEffect(() => {
-    if (persons === undefined) {
-      getData();
-    }
-  }, [getData, persons]);
+    fetchData();
+  }, [fetchData]);
 
   const handleOpenModales = () => {
     setOpenModales(true);
   };
 
-  // const handleClick = () => {
-  //   
-  // };
+  return (<>
+    <HeaderComponent/>
 
-  return (
-    <div
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        flexDirection: 'column',
-        marginTop: 30,
-      }}
+<Grid
+  style={{
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'column',
+    marginTop: 30,
+  }}
+>
+  <Grid
+    style={{
+      display: 'flex',
+      flexDirection: 'column',
+      width: '80%',
+      gap: 30,
+    }}
+  >
+    <BottonAddUser
+      startIcon={<AddIcon />}
+      variant="contained"
+      disableRipple
+      onClick={handleOpenModales}
     >
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          width: '80%',
-          gap: 30,
-        }}
-      >
-        <BottonAddUser
-          startIcon={<AddIcon />}
-          variant="contained"
-          disableRipple
-          onClick={handleOpenModales}
-        >
-          Ajouter un utilisateur
-        </BottonAddUser>
-        <TableComponent persons={persons && persons} />
-      </div>
-      <Modales
-        open={openModales}
-        setOpen={setOpenModales}
-        modalType={'add'}
-        title={'Ajouter un utilisateur'}
-        ButtonName={'Ajouter'}
-      />
+      Ajouter un utilisateur
+    </BottonAddUser>
+    <TableComponent persons={persons && persons} />
+  </Grid>
+  <Modales
+    open={openModales}
+    setOpen={setOpenModales}
+    modalType={'add'}
+    title={'Ajouter un utilisateur'}
+  />
+</Grid>
+  </>
 
-      {/* <Button onClick={handleClick}>Open Snackbar</Button> */}
-
-      {/* <SnackbarComponent
-        message={
-          'rouh takhrarthsrthrthrthrhsrthszrthsthsryhsryjhsryjnryjryjhsryjhsryhrjhsryhsrhsrhrh!'
-        }
-        open={openSnackbar}
-        severity={'error'}
-      /> */}
-    </div>
   );
 };
