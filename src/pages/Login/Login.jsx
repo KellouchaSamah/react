@@ -12,10 +12,11 @@ import { BpCheckbox } from '../../components/Input_component/Checkbox_component'
 import { FormControlLabel, Grid, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import './Login.css';
+import App from '../../App';
 
 function Login() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState(localStorage.getItem('email'));
+  const [password, setPassword] = useState(localStorage.getItem('password'));
   const navigate = useNavigate();
 
   const handleEmailChange = e => {
@@ -41,6 +42,7 @@ function Login() {
     ) {
       const Token = '0123456789';
       localStorage.setItem('token', Token);
+      App();
       navigate('/users');
       console.log('Connexion réussie !');
     } else {

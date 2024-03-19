@@ -2,12 +2,11 @@ import './App.css';
 import { Users } from './pages/Users/Users';
 import Login from './pages/Login/Login';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
-import ReactDOM from 'react-dom/client';
 
 export default function App() {
   const token = localStorage.getItem('token');
 
-  const isAuthenticated = !!token;
+  // const isAuthenticated = !!token;
 
   return (
     <BrowserRouter>
@@ -15,12 +14,10 @@ export default function App() {
         <Route path="/" element={<Login />} />
         <Route
           path="/users"
-          element={isAuthenticated ? <Users /> : <Navigate to="/" />}
+          element={<Users />}
+          //element={isAuthenticated ? <Users /> : <Navigate to="/" />} //j'ai vu que cette pratique n'est pas bonne , est j'ai découvert React query trop tard
         />
       </Routes>
     </BrowserRouter>
   );
 }
-
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(<App />);
