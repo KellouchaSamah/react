@@ -6,6 +6,7 @@ import Button from '@mui/material/Button';
 import Img from '../../assets/images/logo.PNG';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { useNavigate } from 'react-router-dom';
+import './HeaderComponent.css';
 
 export default function HeaderComponent() {
   const navigate = useNavigate();
@@ -14,47 +15,11 @@ export default function HeaderComponent() {
     navigate('/');
   };
   return (
-    <Box
-      sx={{
-        flexGrow: 1,
-      }}
-    >
-      <AppBar
-        position="static"
-        sx={{
-          backgroundColor: '#fff',
-          display: 'flex',
-          justifyContent: 'space-between',
-        }}
-      >
-        <Toolbar
-          sx={{
-            backgroundColor: '#fff',
-            display: 'flex',
-            justifyContent: 'space-between',
-          }}
-        >
-          <img
-            style={{
-              width: '96px',
-              height: '32px',
-            }}
-            src={Img}
-            alt="DocaPoste"
-          />
-
-          <Button
-            startIcon={<LogoutIcon />}
-            sx={{
-              color: 'var(--primary-color)',
-              alignItems: 'flex-end',
-              fontFamily: 'Montserrat',
-              fontWeight: 600,
-              fontSize: '14px',
-              textTransform: 'unset',
-            }}
-            onClick={handleLogOut}
-          >
+    <Box sx={{ flexGrow: 1 }}>
+      <AppBar position="static" className="header">
+        <Toolbar className="header">
+          <img className="logo" src={Img} alt="DocaPoste" />
+          <Button startIcon={<LogoutIcon />} onClick={handleLogOut}>
             Déconnexion
           </Button>
         </Toolbar>

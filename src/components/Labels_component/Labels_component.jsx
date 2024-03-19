@@ -1,19 +1,7 @@
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 
-export const TutoReact = styled(Typography)({
-  color: 'var(--button-color)',
-  fontFamily: 'Montserrat',
-  fontSize: '36px',
-  fontWeight: 600,
-});
-
-export const AccedezA = styled(Typography)({
-  color: '#666D92',
-  fontFamily: 'Montserrat',
-  fontSize: '32px',
-  fontWeight: 600,
-});
+//to use it in all the project
 export const Label = styled(Typography)({
   color: 'var(--primary-color)',
   fontFamily: 'Barlow',

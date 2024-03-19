@@ -10,11 +10,10 @@ export const getUsers = async () => {
     throw error;
   }
 };
-// get only one user (i will use it for the update)
+// get only one user (i will use it for the update) (didn't use it since i pass the user in the props of the modale)
 export const getUser = async userId => {
   try {
     const response = await axios.get(`http://localhost:5000/users/${userId}`);
-    console.log(response.data);
     return response.data;
   } catch (error) {
     console.error('Error fetching user:', error);

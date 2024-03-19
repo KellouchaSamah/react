@@ -1,0 +1,19 @@
+.header {
+  background-color: #ffffff;
+  display: flex;
+  justify-content: space-between;
+}
+
+.logo {
+  width: 96px;
+  height: 32px;
+}
+
+.header button {
+  color: var(--primary-color);
+  font-family: 'Montserrat';
+  font-weight: 600;
+  align-items: flex-end;
+  font-size: 14px;
+  text-transform: unset;
+}

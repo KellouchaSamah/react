@@ -16,10 +16,10 @@ import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import TableHead from '@mui/material/TableHead';
-import Modales from '../Modales/Modales';
+import DeleteModale from '../Modales/DeleteModale';
 import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
 import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
-
+import UpdateModale from '../Modales/UpdateModale';
 function TablePaginationActions(props) {
   const theme = useTheme();
   const { count, page, rowsPerPage, onPageChange } = props;
@@ -239,14 +239,14 @@ export default function TableComponent({ persons }) {
                   align="right"
                 >
                   <IconButton
-                    style={{ color: 'var(--button-color)' }}
+                    style={{ color: 'var(--primary-color)' }}
                     aria-label="edit"
                     onClick={() => handleOpenEditUserModal(person)}
                   >
                     <DriveFileRenameOutlineIcon />
                   </IconButton>
                   <IconButton
-                    style={{ color: 'var(--button-color)' }}
+                    style={{ color: 'var(--primary-color)' }}
                     aria-label="delete"
                     onClick={() => handleOpenDeleteUserModal(person.id)}
                   >
@@ -265,7 +265,7 @@ export default function TableComponent({ persons }) {
           <TableRow>
             <TablePagination
               style={{
-                color: 'var(--button-color)',
+                color: 'var(--primary-color)',
                 fontFamily: 'Barlow',
                 fontWeight: '400',
                 fontSize: '14px',
@@ -285,7 +285,7 @@ export default function TableComponent({ persons }) {
         </TableFooter>
       </Table>
       {user && (
-        <Modales
+        <UpdateModale
           open={openEditUserModal}
           setOpen={setOpenEditUserModal}
           modalType={'update'}
@@ -296,7 +296,7 @@ export default function TableComponent({ persons }) {
         />
       )}
 
-      <Modales
+      <DeleteModale
         open={openDeleteUserModal}
         setOpen={setOpenDeleteUserModal}
         modalType={'delete'}

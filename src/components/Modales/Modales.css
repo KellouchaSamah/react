@@ -1,0 +1,39 @@
+.ModalContainer {
+  font-family: Arial, sans-serif;
+}
+
+.ModalTitle {
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+}
+
+.ModalContent {
+  font-size: 16px;
+  color: #666;
+}
+
+.ModalActions {
+  text-align: right;
+}
+
+.ModalActionIcon {
+  margin-right: 8px;
+}
+
+.ModalButton {
+  padding: 8px 16px;
+  margin-left: 8px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.CloseButton {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  cursor: pointer;
+  color: #999;
+}

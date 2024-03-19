@@ -4,9 +4,9 @@ import { BottonAddUser } from '../../components/Button_component/Button_componen
 import HeaderComponent from '../../components/Header_Component/HeaderComponent';
 
 import AddIcon from '@mui/icons-material/Add';
-import Modales from '../../components/Modales/Modales';
 import { Grid } from '@mui/material';
 import { getUsers } from '../../services/userService';
+import AddModale from '../../components/Modales/AddModale';
 
 export const Users = () => {
   const [openModales, setOpenModales] = useState(false);
@@ -22,51 +22,53 @@ export const Users = () => {
   }, []);
 
   useEffect(() => {
-    fetchData();
-  }, [fetchData]);
+    if (persons === undefined) {
+      fetchData();
+    }
+  }, [fetchData, persons]);
 
   const handleOpenModales = () => {
     setOpenModales(true);
   };
 
-  return (<>
-    <HeaderComponent/>
+  return (
+    <>
+      <HeaderComponent />
 
-<Grid
-  style={{
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'column',
-    marginTop: 30,
-  }}
->
-  <Grid
-    style={{
-      display: 'flex',
-      flexDirection: 'column',
-      width: '80%',
-      gap: 30,
-    }}
-  >
-    <BottonAddUser
-      startIcon={<AddIcon />}
-      variant="contained"
-      disableRipple
-      onClick={handleOpenModales}
-    >
-      Ajouter un utilisateur
-    </BottonAddUser>
-    <TableComponent persons={persons && persons} />
-  </Grid>
-  <Modales
-    open={openModales}
-    setOpen={setOpenModales}
-    modalType={'add'}
-    title={'Ajouter un utilisateur'}
-  />
-</Grid>
-  </>
-
+      <Grid
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          flexDirection: 'column',
+          marginTop: 30,
+        }}
+      >
+        <Grid
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            width: '80%',
+            gap: 30,
+          }}
+        >
+          <BottonAddUser
+            startIcon={<AddIcon />}
+            variant="contained"
+            disableRipple
+            onClick={handleOpenModales}
+          >
+            Ajouter un utilisateur
+          </BottonAddUser>
+          <TableComponent persons={persons && persons} />
+        </Grid>
+        <AddModale
+          open={openModales}
+          setOpen={setOpenModales}
+          title={'Ajouter un utilisateur'}
+          resetUser={() => undefined}
+        />
+      </Grid>
+    </>
   );
 };

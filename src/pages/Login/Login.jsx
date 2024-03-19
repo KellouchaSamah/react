@@ -1,20 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import { BottonSignIn } from '../../components/Button_component/Button_component';
-import { AccedezA } from '../../components/Labels_component/Labels_component';
-import { TutoReact } from '../../components/Labels_component/Labels_component';
 import { Label } from '../../components/Labels_component/Labels_component';
 import {
   Input,
   PasswordInput,
 } from '../../components/Input_component/Input_Component';
 import { BpCheckbox } from '../../components/Input_component/Checkbox_component';
-import { FormControlLabel, Grid } from '@mui/material';
+import { FormControlLabel, Grid, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import './Login.css';
 
-function LoginComponent() {
+function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
@@ -28,35 +27,30 @@ function LoginComponent() {
   };
 
   const handleRememberMeChange = e => {
-    if (e.target.value) {
+    if (e.target.checked) {
       localStorage.setItem('email', email);
       localStorage.setItem('password', password);
     }
-    console.log(email);
   };
 
   const handleLogin = () => {
     if (
       (email === 'training@api-master.fr' && password === 'react') ||
-      (localStorage.getItem('email') && localStorage.getItem('password'))
+      (localStorage.getItem('email') === email &&
+        localStorage.getItem('password') === password)
     ) {
       const Token = '0123456789';
-
       localStorage.setItem('token', Token);
       navigate('/users');
-
       console.log('Connexion réussie !');
     } else {
       console.error('Identifiants incorrects');
     }
   };
-  useEffect(() => {
-    console.log('email now', email);
-  }, [email]);
 
   return (
     <Grid
-      style={{
+      sx={{
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
@@ -83,8 +77,8 @@ function LoginComponent() {
             flexDirection: 'column',
           }}
         >
-          <AccedezA>Accédez à</AccedezA>
-          <TutoReact>Tuto-React </TutoReact>
+          <Typography id="accedezA">Accédez à</Typography>
+          <Typography id="tutoReact">Tuto-React </Typography>
           <Grid
             sx={{
               display: 'flex',
@@ -157,4 +151,5 @@ function LoginComponent() {
     </Grid>
   );
 }
-export default LoginComponent;
+
+export default Login;

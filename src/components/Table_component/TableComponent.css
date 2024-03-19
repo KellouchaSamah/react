@@ -1,0 +1,25 @@
+.table-header {
+  color: var(--primary-color);
+  font-family: 'Barlow';
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.table-content {
+  color: var(--table-content-color);
+  font-family: 'Barlow';
+  font-weight: 400;
+  font-size: 14px;
+  width: 25%;
+}
+
+.table-button {
+  color: var(--primary-color);
+}
+
+.table-pagination {
+  color: var(--primary-color);
+  font-family: 'Barlow';
+  font-weight: 400;
+  font-size: 14px;
+}
